@@ -12,8 +12,6 @@ import (
 	core "github.com/mahdiahmadirad/DaD/internal/dad"
 )
 
-const Version = "0.1.0"
-
 type globalOptions struct {
 	root    string
 	format  string
@@ -47,10 +45,11 @@ func Run(args []string, stdout, stderr io.Writer, environment []string) int {
 		return parseOutcome.code
 	}
 	if options.version {
+		version := CurrentVersion()
 		result := outcome{
 			command: "version", code: core.ExitOK,
-			data: map[string]string{"version": Version},
-			text: "dad " + Version + "\n",
+			data: map[string]string{"version": version},
+			text: "dad " + version + "\n",
 		}
 		emit(result, options, stdout, stderr)
 		return result.code
@@ -453,7 +452,8 @@ func runPrompt(args []string) outcome {
 		return outcome{
 			command: "prompt show", code: core.ExitOK,
 			data: map[string]any{
-				"name": info.Name, "content": string(content), "version": Version,
+				"name": info.Name, "content": string(content),
+				"version": CurrentVersion(),
 			},
 			text: string(content),
 		}

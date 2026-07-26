@@ -1,0 +1,75 @@
+version: 2
+
+project_name: dad
+
+builds:
+  - id: dad
+    main: ./cmd/dad
+    binary: dad
+    env:
+      - CGO_ENABLED=0
+    flags:
+      - -trimpath
+    mod_timestamp: "{{ .CommitTimestamp }}"
+    ldflags:
+      - >-
+        -s -w
+        -X github.com/mahdiahmadirad/DaD/internal/cli.releaseVersion={{ .Version }}
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    ignore:
+      - goos: windows
+        goarch: arm64
+
+archives:
+  - id: dad
+    ids:
+      - dad
+    formats:
+      - tar.gz
+    format_overrides:
+      - goos: windows
+        formats:
+          - zip
+    name_template: "dad_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    builds_info:
+      group: root
+      owner: root
+      mode: 0755
+      mtime: "{{ .CommitDate }}"
+    files:
+      - src: README.md
+        info:
+          mode: 0644
+          mtime: "{{ .CommitDate }}"
+      - src: LICENSE
+        info:
+          mode: 0644
+          mtime: "{{ .CommitDate }}"
+      - src: CHANGELOG.md
+        info:
+          mode: 0644
+          mtime: "{{ .CommitDate }}"
+
+checksum:
+  name_template: "dad_{{ .Version }}_checksums.txt"
+  algorithm: sha256
+
+snapshot:
+  version_template: "0.0.0-snapshot"
+
+release:
+  draft: true
+  replace_existing_draft: true
+  replace_existing_artifacts: false
+  prerelease: auto
+  mode: keep-existing
+  name_template: "DaD {{ .Version }}"
+
+metadata:
+  mod_timestamp: "{{ .CommitTimestamp }}"

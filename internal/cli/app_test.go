@@ -74,6 +74,53 @@ func TestPromptCommandsNeedNoRepository(t *testing.T) {
 	}
 }
 
+func TestVersionOutputsAgree(t *testing.T) {
+	previous := releaseVersion
+	releaseVersion = "1.2.3-rc.1"
+	t.Cleanup(func() {
+		releaseVersion = previous
+	})
+
+	code, stdout, stderr := runCLI(t, "--version")
+	if code != 0 || stdout != "dad 1.2.3-rc.1\n" || stderr != "" {
+		t.Fatalf("text code=%d stdout=%q stderr=%q", code, stdout, stderr)
+	}
+
+	code, stdout, stderr = runCLI(t, "--format", "json", "--version")
+	if code != 0 || stderr != "" {
+		t.Fatalf("JSON code=%d stderr=%q", code, stderr)
+	}
+	var versionEnvelope struct {
+		Data struct {
+			Version string `json:"version"`
+		} `json:"data"`
+	}
+	if err := json.Unmarshal([]byte(stdout), &versionEnvelope); err != nil {
+		t.Fatal(err)
+	}
+	if versionEnvelope.Data.Version != "1.2.3-rc.1" {
+		t.Fatalf("JSON version=%q", versionEnvelope.Data.Version)
+	}
+
+	code, stdout, stderr = runCLI(
+		t, "--format", "json", "prompt", "show", "task-implementation",
+	)
+	if code != 0 || stderr != "" {
+		t.Fatalf("prompt code=%d stderr=%q", code, stderr)
+	}
+	var promptEnvelope struct {
+		Data struct {
+			Version string `json:"version"`
+		} `json:"data"`
+	}
+	if err := json.Unmarshal([]byte(stdout), &promptEnvelope); err != nil {
+		t.Fatal(err)
+	}
+	if promptEnvelope.Data.Version != "1.2.3-rc.1" {
+		t.Fatalf("prompt version=%q", promptEnvelope.Data.Version)
+	}
+}
+
 func TestEndToEndRepositoryCommands(t *testing.T) {
 	root := t.TempDir()
 	writeCLIFile(t, root, "PROJECT-VISION.md", "# Vision\n")

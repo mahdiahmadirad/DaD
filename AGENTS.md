@@ -104,3 +104,22 @@ Add platform-specific implementation only when the required behavior cannot be
 expressed portably. Keep public behavior equivalent on Windows, Linux, and
 macOS. Packaging, publishing, CI, integrations, and new commands require their
 own explicitly approved tasks.
+
+## Release implementation
+
+`ADR-0002` and `SPEC-0003` govern versioning, changelog maintenance, release
+artifacts, and GitHub publication. Release configuration is authoritative in
+`.goreleaser.yaml`; `CHANGELOG.md` is the authoritative user-facing release
+history.
+
+For release-automation changes, also run:
+
+```text
+goreleaser check
+goreleaser release --snapshot --clean
+go run ./internal/releasetool verify 0.0.0-snapshot dist
+```
+
+A snapshot is local verification, not evidence of publication. Creating or
+pushing a release tag and publishing a GitHub Release require the separately
+approved release task and explicit maintainer authorization.

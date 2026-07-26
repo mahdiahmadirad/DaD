@@ -1,0 +1,94 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Test (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+          - windows-latest
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Check out source
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - name: Set up Go
+        uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+        with:
+          go-version-file: go.mod
+          cache: false
+      - name: Verify formatting
+        if: runner.os != 'Windows'
+        shell: bash
+        run: test -z "$(gofmt -l .)"
+      - name: Verify formatting
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $unformatted = gofmt -l .
+          if ($unformatted) {
+            Write-Error "Files require gofmt:`n$unformatted"
+          }
+      - name: Vet
+        run: go vet ./...
+      - name: Test
+        run: go test ./...
+      - name: Exercise POSIX invocation
+        if: runner.os != 'Windows'
+        shell: bash
+        run: |
+          go build -o "$RUNNER_TEMP/dad" ./cmd/dad
+          "$RUNNER_TEMP/dad" --version
+      - name: Exercise PowerShell invocation
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          go build -o "$env:RUNNER_TEMP\dad-powershell.exe" ./cmd/dad
+          & "$env:RUNNER_TEMP\dad-powershell.exe" --version
+      - name: Exercise Command Prompt invocation
+        if: runner.os == 'Windows'
+        shell: cmd
+        run: |
+          go build -o "%RUNNER_TEMP%\dad-cmd.exe" ./cmd/dad
+          "%RUNNER_TEMP%\dad-cmd.exe" --version
+
+  snapshot:
+    name: Verify release snapshot
+    needs:
+      - test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          fetch-depth: 0
+      - name: Set up Go
+        uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+        with:
+          go-version-file: go.mod
+          cache: false
+      - name: Validate GoReleaser configuration
+        uses: goreleaser/goreleaser-action@f06c13b6b1a9625abc9e6e439d9c05a8f2190e94 # v7
+        with:
+          distribution: goreleaser
+          version: 2.17.0
+          args: check
+      - name: Assemble snapshot
+        uses: goreleaser/goreleaser-action@f06c13b6b1a9625abc9e6e439d9c05a8f2190e94 # v7
+        with:
+          distribution: goreleaser
+          version: 2.17.0
+          args: release --snapshot --clean
+      - name: Verify snapshot
+        run: go run ./internal/releasetool verify 0.0.0-snapshot dist

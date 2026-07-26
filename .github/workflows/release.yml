@@ -1,0 +1,131 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+          - windows-latest
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Check out tagged source
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - name: Set up Go
+        uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+        with:
+          go-version-file: go.mod
+          cache: false
+      - name: Validate release tag and changelog
+        run: >-
+          go run ./internal/releasetool validate
+          "${{ github.ref_name }}"
+      - name: Verify formatting
+        if: runner.os != 'Windows'
+        shell: bash
+        run: test -z "$(gofmt -l .)"
+      - name: Verify formatting
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $unformatted = gofmt -l .
+          if ($unformatted) {
+            Write-Error "Files require gofmt:`n$unformatted"
+          }
+      - name: Vet
+        run: go vet ./...
+      - name: Test
+        run: go test ./...
+      - name: Exercise POSIX invocation
+        if: runner.os != 'Windows'
+        shell: bash
+        run: |
+          go build -o "$RUNNER_TEMP/dad" ./cmd/dad
+          "$RUNNER_TEMP/dad" --version
+      - name: Exercise PowerShell invocation
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          go build -o "$env:RUNNER_TEMP\dad-powershell.exe" ./cmd/dad
+          & "$env:RUNNER_TEMP\dad-powershell.exe" --version
+      - name: Exercise Command Prompt invocation
+        if: runner.os == 'Windows'
+        shell: cmd
+        run: |
+          go build -o "%RUNNER_TEMP%\dad-cmd.exe" ./cmd/dad
+          "%RUNNER_TEMP%\dad-cmd.exe" --version
+
+  publish:
+    name: Publish draft, attest, and release
+    needs:
+      - validate
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+      attestations: write
+    steps:
+      - name: Check out tagged source
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          fetch-depth: 0
+      - name: Set up Go
+        uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+        with:
+          go-version-file: go.mod
+          cache: false
+      - name: Resolve release version
+        id: version
+        shell: bash
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          echo "value=$version" >> "$GITHUB_OUTPUT"
+      - name: Extract curated release notes
+        run: >-
+          go run ./internal/releasetool notes
+          "$GITHUB_REF_NAME" .release-notes.md
+      - name: Validate GoReleaser configuration
+        uses: goreleaser/goreleaser-action@f06c13b6b1a9625abc9e6e439d9c05a8f2190e94 # v7
+        with:
+          distribution: goreleaser
+          version: 2.17.0
+          args: check
+      - name: Build draft release
+        uses: goreleaser/goreleaser-action@f06c13b6b1a9625abc9e6e439d9c05a8f2190e94 # v7
+        with:
+          distribution: goreleaser
+          version: 2.17.0
+          args: >-
+            release --clean
+            --release-notes=.release-notes.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Verify release artifacts
+        run: >-
+          go run ./internal/releasetool verify
+          "${{ steps.version.outputs.value }}" dist
+      - name: Attest release archives
+        uses: actions/attest@f7c74d28b9d84cb8768d0b8ca14a4bac6ef463e6 # v4
+        with:
+          subject-checksums: >-
+            ./dist/dad_${{ steps.version.outputs.value }}_checksums.txt
+      - name: Attest checksum manifest
+        uses: actions/attest@f7c74d28b9d84cb8768d0b8ca14a4bac6ef463e6 # v4
+        with:
+          subject-path: >-
+            ./dist/dad_${{ steps.version.outputs.value }}_checksums.txt
+      - name: Publish verified draft
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release edit "$GITHUB_REF_NAME" --draft=false
