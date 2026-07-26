@@ -29,8 +29,9 @@ DaD will define a practical way to:
 - support review and maintenance by people who did not perform the original
   work.
 
-The framework may eventually include conventions, schemas, validation, and
-supporting tools. Their form is deliberately left to later approved phases.
+The framework can include conventions, schemas, validation, and supporting
+tools. Each is introduced only through a bounded, approved phase rather than
+assumed in advance.
 
 ## Target audience
 

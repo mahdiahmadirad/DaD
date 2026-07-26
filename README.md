@@ -12,9 +12,9 @@ vendor, editor, or automation platform.
 
 ## Status
 
-DaD is in its bootstrap phase. This repository currently defines the project's
-scope, principles, working rules, and intended structure. It does not yet
-implement the framework.
+DaD currently provides its documentation model, methodology, official prompts,
+adoption examples, and a cross-platform command-line interface. The repository
+uses these artifacts to govern its own incremental development.
 
 ## Start here
 
@@ -23,32 +23,61 @@ implement the framework.
 - [AGENTS.md](AGENTS.md) defines the rules for humans and coding agents working
   in this repository.
 - [TASK-0000.md](TASK-0000.md) records the repository bootstrap task.
+- [docs/OVERVIEW.md](docs/OVERVIEW.md) explains the DaD methodology.
+- [docs/DOCUMENTATION.md](docs/DOCUMENTATION.md) defines document numbering,
+  references, lifecycle, and templates.
 
-## Intended repository structure
-
-The structure below is the target organization, not a list of artifacts that
-already exist. Directories are introduced only when an approved task requires
-them.
+## Repository structure
 
 ```text
 .
-├── README.md              # Project entry point
-├── PROJECT-VISION.md      # Durable project direction and boundaries
-├── AGENTS.md              # Repository-wide implementation instructions
-├── TASK-*.md              # Bounded units of work and their outcomes
-├── LICENSE
+├── cmd/dad/               # CLI entry point
+├── internal/              # CLI implementation
+├── resources.go           # Embedded authoritative framework resources
 ├── docs/
 │   ├── adr/               # Accepted architectural decisions
-│   └── specs/             # Approved, implementable behavior
-├── src/                   # Framework implementation
-├── tests/                 # Executable verification
-├── tools/                 # Project-owned development utilities
-└── examples/              # Focused adoption examples
+│   ├── specs/             # Approved, implementable behavior
+│   └── templates/         # Canonical document templates
+├── prompts/               # Official agent-neutral prompts
+├── examples/              # Progressive adoption examples and case studies
+├── PROJECT-VISION.md      # Durable project direction and boundaries
+├── AGENTS.md              # Repository-wide implementation instructions
+├── TASK-*.md              # Bounded work and completion evidence
+├── go.mod
+├── LICENSE
 ```
 
 This structure separates intent, decisions, specifications, implementation,
-and verification. The exact contents and language-specific layout will be
-decided by later tasks rather than assumed during bootstrap.
+and verification. Directories are introduced only when approved work requires
+them.
+
+## CLI
+
+The CLI is implemented in Go as one codebase for Windows, Linux, and macOS. It
+operates locally without Git, network access, or an AI service.
+
+Build and verify it with a Go 1.25 or newer toolchain:
+
+```text
+go build ./cmd/dad
+go test ./...
+```
+
+The executable provides:
+
+```text
+dad init
+dad new
+dad list
+dad status
+dad context
+dad check
+dad prompt
+```
+
+Run `dad --help` for command syntax. The authoritative CLI contracts are
+[SPEC-0001](docs/specs/SPEC-0001.md) and
+[SPEC-0002](docs/specs/SPEC-0002.md).
 
 ## License
 

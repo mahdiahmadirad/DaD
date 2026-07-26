@@ -88,9 +88,9 @@ A project can adopt DaD incrementally:
 4. Add SPECs where behavior needs an implementation-independent contract.
 5. Require completion evidence and reconcile drift when it is found.
 
-The methodology is useful before automation exists. Tools may later assist
-discovery or verification, but the document model and workflow must remain
-understandable and usable without them.
+The methodology remains useful without automation. The DaD CLI can assist with
+document creation, context discovery, and structural verification, but the
+document model and workflow remain understandable and usable without it.
 
 ## Further reading
 

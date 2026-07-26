@@ -85,8 +85,22 @@ agent unless an approved integration explicitly requires one.
 When no automated check exists, report the manual verification performed and
 its limitations. Never claim to have run a check that was not run.
 
-## Phase 1 boundary
+## CLI implementation
 
-The repository is currently bootstrapped, not implemented. Until a later task
-is explicitly approved, do not create ADRs, specifications, framework code,
-tools, CI workflows, a CLI, or examples.
+The DaD CLI is a Go module governed by `ADR-0001`, `SPEC-0001`, and
+`SPEC-0002`. Its public entry point is `cmd/dad`; reusable behavior belongs in
+`internal/`. Canonical Markdown and prompts are embedded from their
+authoritative repository files through `resources.go`.
+
+For CLI changes, run:
+
+```text
+gofmt -w <changed Go files>
+go vet ./...
+go test ./...
+```
+
+Add platform-specific implementation only when the required behavior cannot be
+expressed portably. Keep public behavior equivalent on Windows, Linux, and
+macOS. Packaging, publishing, CI, integrations, and new commands require their
+own explicitly approved tasks.
