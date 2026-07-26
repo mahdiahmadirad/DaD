@@ -3,6 +3,7 @@
 package dad
 
 import (
+	"os"
 	"path/filepath"
 	"testing"
 )
@@ -16,7 +17,18 @@ func TestWindowsRootSupportsNativeUnicodePath(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if filepath.Clean(resolved) != filepath.Clean(nested) {
-		t.Fatalf("resolved %q, want %q", resolved, nested)
+	resolvedInfo, err := os.Stat(resolved)
+	if err != nil {
+		t.Fatal(err)
+	}
+	nestedInfo, err := os.Stat(nested)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !os.SameFile(resolvedInfo, nestedInfo) {
+		t.Fatalf("resolved %q does not identify %q", resolved, nested)
+	}
+	if filepath.Base(resolved) != "space and ünicode" {
+		t.Fatalf("resolved path lost native Unicode name: %q", resolved)
 	}
 }
