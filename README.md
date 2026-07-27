@@ -87,7 +87,11 @@ Run `dad --help` for command syntax. The authoritative CLI contracts are
 
 GitHub Releases is the primary distribution channel. After a release is
 published, download the archive for your platform from the
-[DaD releases page](https://github.com/mahdiahmadirad/DaD/releases):
+[DaD releases page](https://github.com/mahdiahmadirad/DaD/releases).
+
+The current prerelease is
+[v0.1.0-rc.1](https://github.com/mahdiahmadirad/DaD/releases/tag/v0.1.0-rc.1).
+Choose the archive matching your platform:
 
 ```text
 dad_VERSION_linux_amd64.tar.gz
