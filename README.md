@@ -14,9 +14,8 @@ vendor, editor, or automation platform.
 
 DaD currently provides its documentation model, methodology, official prompts,
 adoption examples, and a cross-platform command-line interface. The repository
-uses these artifacts to govern its own incremental development. Tag-driven
-release automation is present, but no public CLI release has been published
-yet.
+uses these artifacts to govern its own incremental development. Versioned CLI
+archives are distributed through tag-driven GitHub Releases.
 
 ## Start here
 

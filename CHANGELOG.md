@@ -7,6 +7,8 @@ and release versions follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.1.0-rc.1] - 2026-07-28
+
 ### Added
 
 - The agent-neutral DaD documentation model, workflow, templates, official
@@ -22,3 +24,11 @@ and release versions follow [Semantic Versioning](https://semver.org/).
 - Development builds now report `dev`; release and versioned module builds
   obtain their semantic version from build metadata instead of a maintained
   source constant.
+
+### Known limitations
+
+- Release archives are unsigned and not notarized, so Windows or macOS may
+  display reputation or quarantine warnings.
+- Native execution is verified for the hosted amd64 runners and macOS arm64;
+  Linux arm64 is cross-compiled and its archive is structurally verified but
+  is not executed natively by the release workflow.
