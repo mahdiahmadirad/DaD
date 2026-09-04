@@ -13,10 +13,10 @@ func TestCheckValidRepository(t *testing.T) {
 		validSPEC("SPEC-0001", "Approved", "[ADR-0001](../adr/ADR-0001.md) governs."),
 	)
 	writeFixture(
-		t, root, "TASK-0001.md",
+		t, root, "docs/tasks/TASK-0001.md",
 		validTASK(
 			"TASK-0001", "Ready",
-			"[SPEC-0001](docs/specs/SPEC-0001.md) governs.",
+			"[SPEC-0001](../specs/SPEC-0001.md) governs.",
 			"- All fixture checks pass with the approved behavior.", "Not yet recorded.",
 		),
 	)
@@ -58,10 +58,10 @@ func TestCheckFindings(t *testing.T) {
 			name: "broken reference", code: "DAD-CHECK-016",
 			set: func(t *testing.T, root string) {
 				writeFixture(
-					t, root, "TASK-0001.md",
+					t, root, "docs/tasks/TASK-0001.md",
 					validTASK(
 						"TASK-0001", "Proposed",
-						"[SPEC-0001](docs/specs/SPEC-0001.md) governs.",
+						"[SPEC-0001](../specs/SPEC-0001.md) governs.",
 						"- Acceptance remains proposed.", "Not yet recorded.",
 					),
 				)
@@ -72,10 +72,10 @@ func TestCheckFindings(t *testing.T) {
 			set: func(t *testing.T, root string) {
 				writeFixture(t, root, "docs/specs/SPEC-0001.md", validSPEC("SPEC-0001", "Draft", ""))
 				writeFixture(
-					t, root, "TASK-0001.md",
+					t, root, "docs/tasks/TASK-0001.md",
 					validTASK(
 						"TASK-0001", "Ready",
-						"[SPEC-0001](docs/specs/SPEC-0001.md) governs.",
+						"[SPEC-0001](../specs/SPEC-0001.md) governs.",
 						"- Acceptance is substantive and locally verifiable.", "Not yet recorded.",
 					),
 				)
@@ -91,7 +91,7 @@ func TestCheckFindings(t *testing.T) {
 			name: "complete without evidence", code: "DAD-CHECK-011",
 			set: func(t *testing.T, root string) {
 				writeFixture(
-					t, root, "TASK-0001.md",
+					t, root, "docs/tasks/TASK-0001.md",
 					validTASK(
 						"TASK-0001", "Complete", "",
 						"- Acceptance is satisfied.", "To be recorded after implementation.",
@@ -103,9 +103,9 @@ func TestCheckFindings(t *testing.T) {
 			name: "reference escapes root", code: "DAD-CHECK-015",
 			set: func(t *testing.T, root string) {
 				writeFixture(
-					t, root, "TASK-0001.md",
+					t, root, "docs/tasks/TASK-0001.md",
 					validTASK(
-						"TASK-0001", "Proposed", "[outside](../outside.md)",
+						"TASK-0001", "Proposed", "[outside](../../../outside.md)",
 						"- Acceptance remains proposed.", "Not yet recorded.",
 					),
 				)
@@ -114,14 +114,14 @@ func TestCheckFindings(t *testing.T) {
 		{
 			name: "ready without acceptance", code: "DAD-CHECK-010",
 			set: func(t *testing.T, root string) {
-				writeFixture(t, root, "TASK-0001.md", validTASK("TASK-0001", "Ready", "", "", ""))
+				writeFixture(t, root, "docs/tasks/TASK-0001.md", validTASK("TASK-0001", "Ready", "", "", ""))
 			},
 		},
 		{
 			name: "blocked without note", code: "DAD-CHECK-012",
 			set: func(t *testing.T, root string) {
 				writeFixture(
-					t, root, "TASK-0001.md",
+					t, root, "docs/tasks/TASK-0001.md",
 					validTASK(
 						"TASK-0001", "Blocked", "",
 						"- Acceptance remains defined while blocked.", "Not yet recorded.",
@@ -166,7 +166,7 @@ func TestCheckFindings(t *testing.T) {
 func TestCheckStrictMakesWarningFail(t *testing.T) {
 	root := fixtureRepository(t)
 	writeFixture(
-		t, root, "TASK-0001.md",
+		t, root, "docs/tasks/TASK-0001.md",
 		validTASK(
 			"TASK-0001", "Blocked", "",
 			"- Acceptance remains defined while blocked.", "Not yet recorded.",
@@ -190,10 +190,10 @@ func TestCheckSelectedDocumentIncludesReferencedGovernedDocuments(t *testing.T) 
 		validSPEC("SPEC-0001", "Approved", "[ADR-0001](../adr/ADR-0001.md) governs."),
 	)
 	writeFixture(
-		t, root, "TASK-0001.md",
+		t, root, "docs/tasks/TASK-0001.md",
 		validTASK(
 			"TASK-0001", "In Progress",
-			"[SPEC-0001](docs/specs/SPEC-0001.md) governs.",
+			"[SPEC-0001](../specs/SPEC-0001.md) governs.",
 			"- The selected document scope is checked.", "Not yet recorded.",
 		),
 	)
