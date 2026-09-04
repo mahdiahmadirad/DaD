@@ -140,6 +140,8 @@ func NewDocument(root string, options NewOptions) (NewResult, []Diagnostic, int)
 		directory = filepath.Join(root, "docs", "adr")
 	case SPEC:
 		directory = filepath.Join(root, "docs", "specs")
+	case TASK:
+		directory = filepath.Join(root, "docs", "tasks")
 	}
 	if !WithinRoot(root, directory) {
 		return NewResult{}, []Diagnostic{{
@@ -250,6 +252,8 @@ func buildNewResult(documentType DocumentType, title string, number int, created
 	case SPEC:
 		path = filepath.ToSlash(filepath.Join("docs", "specs", path))
 		status = "Draft"
+	case TASK:
+		path = filepath.ToSlash(filepath.Join("docs", "tasks", path))
 	}
 	return NewResult{
 		ID: id, Type: documentType, Title: title, Path: path,
