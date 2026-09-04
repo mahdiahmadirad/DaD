@@ -94,17 +94,7 @@ func candidateDocumentPaths(root string) ([]string, []Diagnostic) {
 	}
 	addDirectoryFiles(filepath.Join(root, "docs", "adr"), ADR)
 	addDirectoryFiles(filepath.Join(root, "docs", "specs"), SPEC)
-	entries, err := os.ReadDir(root)
-	if err == nil {
-		for _, entry := range entries {
-			if entry.IsDir() || !strings.HasSuffix(strings.ToLower(entry.Name()), ".md") {
-				continue
-			}
-			if strings.HasPrefix(strings.ToUpper(entry.Name()), "TASK-") {
-				addPath(filepath.Join(root, entry.Name()))
-			}
-		}
-	}
+	addDirectoryFiles(filepath.Join(root, "docs", "tasks"), TASK)
 	sortPaths(paths)
 	SortDiagnostics(diagnostics)
 	return paths, diagnostics

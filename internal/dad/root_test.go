@@ -70,8 +70,8 @@ func TestResolveRootRejectsMissingMarkers(t *testing.T) {
 
 func TestResolveReferenceRejectsEscape(t *testing.T) {
 	root := fixtureRepository(t)
-	source := filepath.Join(root, "TASK-0001.md")
-	if _, err := ResolveReference(root, source, "../outside.md"); err == nil {
+	source := filepath.Join(root, "docs", "tasks", "TASK-0001.md")
+	if _, err := ResolveReference(root, source, "../../../outside.md"); err == nil {
 		t.Fatal("expected escape error")
 	}
 }

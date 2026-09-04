@@ -8,7 +8,7 @@ that each concern has one authoritative home.
 | Project vision | Defines durable direction and boundaries | `PROJECT-VISION.md` |
 | ADR | Records why a consequential technical decision was made | `docs/adr/ADR-NNNN.md` |
 | SPEC | Defines approved, externally observable or implementation-significant behavior | `docs/specs/SPEC-NNNN.md` |
-| TASK | Bounds a unit of work and records its outcome | `TASK-NNNN.md` |
+| TASK | Bounds a unit of work and records its outcome | `docs/tasks/TASK-NNNN.md` |
 
 Templates live in `docs/templates/` and are not project documents. A document
 should be created only when its content serves the purpose above; not every

@@ -7,7 +7,7 @@ This example contains:
 
 - [PROJECT-VISION.md](PROJECT-VISION.md) for durable direction;
 - [AGENTS.md](AGENTS.md) for contributor rules; and
-- [TASK-0001.md](TASK-0001.md) for one bounded change.
+- [TASK-0001](docs/tasks/TASK-0001.md) for one bounded change.
 
 There is no ADR because the task requires no consequential architectural
 decision. There is no SPEC because the task's acceptance conditions are

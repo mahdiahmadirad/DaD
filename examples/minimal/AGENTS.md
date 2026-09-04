@@ -5,7 +5,7 @@ These instructions apply to humans and AI coding agents working on Pulse.
 Before changing the project:
 
 1. Read `PROJECT-VISION.md`.
-2. Read the requested `TASK-NNNN.md`.
+2. Read the requested `docs/tasks/TASK-NNNN.md`.
 3. Inspect the affected code and tests.
 
 Implement only a TASK in `Ready` or `In Progress` status. Do not add behavior

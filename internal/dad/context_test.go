@@ -13,7 +13,7 @@ func TestContextResolvesExplicitAuthorityChain(t *testing.T) {
 		),
 	)
 	writeFixture(
-		t, root, "TASK-0000.md",
+		t, root, "docs/tasks/TASK-0000.md",
 		validTASK(
 			"TASK-0000", "Complete", "",
 			"- Bootstrap acceptance condition is satisfied.",
@@ -21,11 +21,11 @@ func TestContextResolvesExplicitAuthorityChain(t *testing.T) {
 		),
 	)
 	writeFixture(
-		t, root, "TASK-0001.md",
+		t, root, "docs/tasks/TASK-0001.md",
 		validTASK(
 			"TASK-0001", "Ready",
 			"- [TASK-0000](TASK-0000.md) is the completed prerequisite.\n"+
-				"- [SPEC-0001](docs/specs/SPEC-0001.md) governs behavior.",
+				"- [SPEC-0001](../specs/SPEC-0001.md) governs behavior.",
 			"- The approved behavior is implemented and verified.",
 			"Not yet recorded.",
 		),
@@ -59,10 +59,10 @@ func TestContextRejectsDraftSpecification(t *testing.T) {
 		validSPEC("SPEC-0001", "Draft", ""),
 	)
 	writeFixture(
-		t, root, "TASK-0001.md",
+		t, root, "docs/tasks/TASK-0001.md",
 		validTASK(
 			"TASK-0001", "Ready",
-			"[SPEC-0001](docs/specs/SPEC-0001.md) governs behavior.",
+			"[SPEC-0001](../specs/SPEC-0001.md) governs behavior.",
 			"- The approved behavior is implemented.", "Not yet recorded.",
 		),
 	)

@@ -7,6 +7,13 @@ and release versions follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Changed
+
+- TASK documents now use `docs/tasks/TASK-NNNN.md` as their canonical location.
+  The CLI creates and discovers TASKs only in that directory. Repositories using
+  root-level `TASK-*.md` files must move them into `docs/tasks/` when adopting
+  a release containing this change.
+
 ## [0.1.0-rc.1] - 2026-07-28
 
 ### Added

@@ -5,7 +5,7 @@ These instructions apply to humans and AI coding agents working on Relay.
 Before implementation:
 
 1. Read `PROJECT-VISION.md`.
-2. Read the requested TASK.
+2. Read the requested TASK under `docs/tasks/`.
 3. Read every accepted ADR and approved SPEC linked by that TASK.
 4. Inspect the affected implementation, tests, and version-control state.
 
