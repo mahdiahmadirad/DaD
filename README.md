@@ -23,7 +23,7 @@ archives are distributed through tag-driven GitHub Releases.
   principles, scope, and non-goals.
 - [AGENTS.md](AGENTS.md) defines the rules for humans and coding agents working
   in this repository.
-- [TASK-0000.md](TASK-0000.md) records the repository bootstrap task.
+- [TASK-0000](docs/tasks/TASK-0000.md) records the repository bootstrap task.
 - [docs/OVERVIEW.md](docs/OVERVIEW.md) explains the DaD methodology.
 - [docs/DOCUMENTATION.md](docs/DOCUMENTATION.md) defines document numbering,
   references, lifecycle, and templates.
@@ -41,12 +41,12 @@ archives are distributed through tag-driven GitHub Releases.
 ├── docs/
 │   ├── adr/               # Accepted architectural decisions
 │   ├── specs/             # Approved, implementable behavior
+│   ├── tasks/             # Bounded work and completion evidence
 │   └── templates/         # Canonical document templates
 ├── prompts/               # Official agent-neutral prompts
 ├── examples/              # Progressive adoption examples and case studies
 ├── PROJECT-VISION.md      # Durable project direction and boundaries
 ├── AGENTS.md              # Repository-wide implementation instructions
-├── TASK-*.md              # Bounded work and completion evidence
 ├── go.mod
 ├── LICENSE
 ```
