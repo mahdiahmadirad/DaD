@@ -81,10 +81,10 @@ func TestNewDocumentDryRunAndExplicitNumber(t *testing.T) {
 		Type: TASK, Title: "Preview", DryRun: true,
 	})
 	if code != ExitOK || len(diagnostics) != 0 ||
-		preview.ID != "TASK-0001" || preview.Created {
+		preview.ID != "TASK-0001" || preview.Path != "docs/tasks/TASK-0001.md" || preview.Created {
 		t.Fatalf("preview=%#v diagnostics=%#v code=%d", preview, diagnostics, code)
 	}
-	if _, err := os.Stat(filepath.Join(root, preview.Path)); !os.IsNotExist(err) {
+	if _, err := os.Stat(filepath.Join(root, filepath.FromSlash(preview.Path))); !os.IsNotExist(err) {
 		t.Fatalf("dry run wrote document: %v", err)
 	}
 
@@ -101,6 +101,22 @@ func TestNewDocumentDryRunAndExplicitNumber(t *testing.T) {
 	}
 	if string(content[:len("# SPEC-0007: Contract")]) != "# SPEC-0007: Contract" {
 		t.Fatalf("unexpected content: %q", content)
+	}
+}
+
+func TestNewTaskCreatesCanonicalParentDirectory(t *testing.T) {
+	root := fixtureRepository(t)
+	result, diagnostics, code := NewDocument(root, NewOptions{
+		Type: TASK, Title: "Canonical task path",
+	})
+	if code != ExitOK || len(diagnostics) != 0 || !result.Created {
+		t.Fatalf("result=%#v diagnostics=%#v code=%d", result, diagnostics, code)
+	}
+	if result.Path != "docs/tasks/TASK-0001.md" {
+		t.Fatalf("path=%q, want docs/tasks/TASK-0001.md", result.Path)
+	}
+	if _, err := os.Stat(filepath.Join(root, "docs", "tasks", "TASK-0001.md")); err != nil {
+		t.Fatal(err)
 	}
 }
 
@@ -172,6 +188,9 @@ func TestConcurrentNewDocumentAllocatesUniqueNumbers(t *testing.T) {
 	var identifiers []string
 	for result := range results {
 		identifiers = append(identifiers, result.ID)
+		if filepath.ToSlash(filepath.Dir(result.Path)) != "docs/tasks" {
+			t.Errorf("task path=%q, want docs/tasks", result.Path)
+		}
 	}
 	sort.Strings(identifiers)
 	if len(identifiers) != count {
