@@ -9,7 +9,7 @@ The governing path is:
 1. [PROJECT-VISION.md](PROJECT-VISION.md) sets durable product boundaries.
 2. [ADR-0001](docs/adr/ADR-0001.md) accepts durable receipt before processing.
 3. [SPEC-0001](docs/specs/SPEC-0001.md) defines the webhook contract.
-4. [TASK-0001](TASK-0001.md) authorizes one implementation change.
+4. [TASK-0001](docs/tasks/TASK-0001.md) authorizes one implementation change.
 5. [AGENTS.md](AGENTS.md) tells contributors how to follow that path.
 
 The content is fictional and contains no runnable service. The ADR and SPEC
