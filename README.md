@@ -90,7 +90,7 @@ published, download the archive for your platform from the
 [DaD releases page](https://github.com/mahdiahmadirad/DaD/releases).
 
 The current prerelease is
-[v0.1.0-rc.1](https://github.com/mahdiahmadirad/DaD/releases/tag/v0.1.0-rc.1).
+[v0.2.0-rc.1](https://github.com/mahdiahmadirad/DaD/releases/tag/v0.2.0-rc.1).
 Choose the archive matching your platform:
 
 ```text
