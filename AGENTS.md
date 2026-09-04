@@ -9,7 +9,7 @@ subdirectories later, but they must not silently contradict this file.
 Before changing the repository:
 
 1. Read `PROJECT-VISION.md`.
-2. Read the active `TASK-*.md` file.
+2. Read the active `docs/tasks/TASK-*.md` file.
 3. Read any accepted decisions and approved specifications referenced by that
    task.
 4. Inspect the implementation and tests affected by the change.
@@ -41,11 +41,10 @@ source makes implementation easiest.
 
 - `PROJECT-VISION.md` defines durable purpose, audience, principles, scope, and
   non-goals.
-- `TASK-*.md` defines a bounded change, its constraints, and its acceptance
-  conditions.
-- `docs/adr/` will contain accepted architectural decisions and their
-  rationale.
-- `docs/specs/` will contain approved, implementable behavior and interfaces.
+- `docs/tasks/TASK-*.md` defines bounded changes, their constraints, acceptance
+  conditions, and completion evidence.
+- `docs/adr/` contains accepted architectural decisions and their rationale.
+- `docs/specs/` contains approved, implementable behavior and interfaces.
 - Code implements approved behavior.
 - Tests and other checks provide repeatable evidence about the implementation.
 
@@ -54,7 +53,8 @@ only when an approved task requires it.
 
 ## Task lifecycle
 
-Each implementation phase must have one active task. A task should state:
+Each implementation phase must have one active task under `docs/tasks/`. A task
+should state:
 
 - the problem or outcome;
 - in-scope and out-of-scope work;
