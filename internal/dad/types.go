@@ -163,7 +163,7 @@ func (d Document) ExpectedPath() string {
 	case SPEC:
 		return filepath.ToSlash(filepath.Join("docs", "specs", d.CanonicalFilename()))
 	case TASK:
-		return d.CanonicalFilename()
+		return filepath.ToSlash(filepath.Join("docs", "tasks", d.CanonicalFilename()))
 	default:
 		return ""
 	}
