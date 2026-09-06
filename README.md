@@ -1,14 +1,118 @@
 # DaD
 
 DaD (Document-aware Development) is an open-source framework for governing
-software implementation with durable project context.
+software implementation with durable, versioned project context.
 
 It is intended to reduce implementation drift, preserve architectural intent,
 and keep software understandable and maintainable when work is performed by
 people, AI coding agents, or both.
 
-DaD is agent-neutral. Its conventions must not depend on a particular model,
-vendor, editor, or automation platform.
+DaD is agent-neutral. Its conventions do not depend on a particular model,
+vendor, editor, repository host, or automation platform.
+
+## Why DaD?
+
+A contributor can make a locally reasonable change and still move a project
+away from its intended direction.
+
+The missing information is often not more source code. It is the context around
+the code: why a boundary exists, which alternative was rejected, what behavior
+is approved, what the current task excludes, and what evidence is required
+before the work is complete. AI-assisted development makes this failure mode
+faster and more visible, but it does not create it.
+
+DaD keeps these concerns close to implementation while giving each one a
+distinct role:
+
+| Artifact | Question it answers |
+| --- | --- |
+| Project vision | Why does this project exist, and where are its boundaries? |
+| ADR | Why was a consequential technical decision made? |
+| SPEC | What behavior or interface has been approved? |
+| TASK | What bounded change is authorized now, and how will it be verified? |
+| Code | How is the approved behavior implemented? |
+| Tests and checks | What repeatable evidence supports the result? |
+
+The goal is not to maximize documentation. Detail should be proportional to the
+decision and its risk, and context should be required only when it can guide
+implementation or review. The authoritative model is described in
+[PROJECT-VISION.md](PROJECT-VISION.md) and
+[docs/DOCUMENTATION.md](docs/DOCUMENTATION.md).
+
+## What DaD is—and is not
+
+DaD provides:
+
+- a repository-level documentation and governance model;
+- explicit relationships between intent, decisions, specifications, tasks,
+  implementation, and evidence;
+- official agent-neutral prompts and incremental adoption examples; and
+- a local CLI for initializing the structure, creating and listing documents,
+  assembling task-specific context, and checking structural consistency.
+
+DaD is not an AI coding agent, an orchestration service, a replacement for
+testing or code review, or a guarantee that an implementation is correct. It
+does not give generated documentation authority over reviewed decisions or
+executable behavior.
+
+## Relationship to related frameworks
+
+DaD shares the intent-first concerns of projects such as
+[GitHub Spec Kit](https://github.github.com/spec-kit/),
+[OpenSpec](https://github.com/Fission-AI/OpenSpec), and
+[BMAD](https://docs.bmad-method.org/), but starts from a narrower question:
+**what durable, repository-held context should govern a change before, during,
+and after implementation?**
+
+Those projects provide structured specification or broader AI-assisted delivery
+workflows. DaD focuses on the roles, authority, lifecycle, traceability, and
+proportionality of project artifacts. Its CLI supports that model; it does not
+run an end-to-end planning or implementation workflow.
+
+DaD should therefore not be assumed to replace, integrate with, or be
+incompatible with any of these projects. They evolve independently, and
+coexistence has not yet been verified. The links above point to their own
+documentation for current behavior.
+
+## See it in practice
+
+[DaD Sample — Text Analysis API](https://github.com/mahdiahmadirad/DaD-sample)
+is a small ASP.NET Core project with one explicit architectural constraint: the
+application must remain independent from any specific AI provider.
+
+You can inspect the governing chain without installing anything:
+
+1. Read the sample's
+   [project vision](https://github.com/mahdiahmadirad/DaD-sample/blob/main/PROJECT-VISION.md)
+   for its purpose and boundaries.
+2. Read
+   [ADR-0001](https://github.com/mahdiahmadirad/DaD-sample/blob/main/docs/adr/ADR-0001.md)
+   for the provider-independence decision.
+3. Read
+   [SPEC-0001](https://github.com/mahdiahmadirad/DaD-sample/blob/main/docs/specs/SPEC-0001.md)
+   for the approved provider and API behavior.
+4. Read
+   [TASK-0001](https://github.com/mahdiahmadirad/DaD-sample/blob/main/docs/tasks/TASK-0001.md)
+   for the bounded implementation scope and completion evidence.
+5. Compare those artifacts with the
+   [implementation](https://github.com/mahdiahmadirad/DaD-sample/tree/main/src)
+   and
+   [tests](https://github.com/mahdiahmadirad/DaD-sample/tree/main/tests).
+
+The sample currently demonstrates the governed path from intent to evidence. It
+is planned to evolve through deliberate drift and reconciliation, but those
+stages are not presented as completed evidence yet.
+
+## Essays
+
+The ideas behind DaD are developed in a bilingual essay series:
+
+1. [When Building Becomes Easier Than Understanding](https://mehdiahmadirad.me/en/articles/building-easier-than-understanding/)
+   — [وقتی ساختن آسان‌تر از فهمیدن می‌شود](https://mehdiahmadirad.me/fa/articles/building-easier-than-understanding/)
+2. [A Project Should Be Able to Explain Itself](https://mehdiahmadirad.me/en/articles/project-should-explain-itself/)
+   — [پروژه باید بتواند خودش را توضیح دهد](https://mehdiahmadirad.me/fa/articles/project-should-explain-itself/)
+3. [Building a Project with Document-Aware Development](https://mehdiahmadirad.me/en/articles/building-a-project-with-dad/)
+   — [ساختن یک پروژه با Document-Aware Development](https://mehdiahmadirad.me/fa/articles/building-a-project-with-dad/)
 
 ## Status
 
@@ -17,16 +121,20 @@ adoption examples, and a cross-platform command-line interface. The repository
 uses these artifacts to govern its own incremental development. Versioned CLI
 archives are distributed through tag-driven GitHub Releases.
 
+The current release is a prerelease. DaD is ready for inspection and
+experimentation, but its conventions and CLI contract may still change before
+1.0.
+
 ## Start here
 
 - [PROJECT-VISION.md](PROJECT-VISION.md) defines the product vision, audience,
   principles, scope, and non-goals.
 - [AGENTS.md](AGENTS.md) defines the rules for humans and coding agents working
   in this repository.
-- [TASK-0000](docs/tasks/TASK-0000.md) records the repository bootstrap task.
 - [docs/OVERVIEW.md](docs/OVERVIEW.md) explains the DaD methodology.
 - [docs/DOCUMENTATION.md](docs/DOCUMENTATION.md) defines document numbering,
   references, lifecycle, and templates.
+- [TASK-0000](docs/tasks/TASK-0000.md) records the repository bootstrap task.
 
 ## Repository structure
 
@@ -85,8 +193,8 @@ Run `dad --help` for command syntax. The authoritative CLI contracts are
 
 ## Installation
 
-GitHub Releases is the primary distribution channel. After a release is
-published, download the archive for your platform from the
+GitHub Releases is the primary distribution channel. Download the archive for
+your platform from the
 [DaD releases page](https://github.com/mahdiahmadirad/DaD/releases).
 
 The current prerelease is
